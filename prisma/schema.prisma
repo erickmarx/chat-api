@@ -1,0 +1,92 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("POSTGRES_URL")
+}
+
+model Profile {
+  id                  String                @id @default(uuid())
+  lastSeenAt          DateTime?
+  profileConversation ProfileConversation[]
+  messages            Message[]
+  ChatSettings        ChatSettings?
+  BlockedConversation BlockedConversation[]
+}
+
+model ChatSettings {
+  id String @id @default(uuid())
+
+  profile   Profile @relation(fields: [profileId], references: [id])
+  profileId String  @unique
+}
+
+model BlockedConversation {
+  id      String  @id @default(uuid())
+  blocked Boolean @default(false)
+
+  profile        Profile      @relation(fields: [profileId], references: [id])
+  profileId      String
+  conversation   Conversation @relation(fields: [conversationId], references: [id])
+  conversationId String
+
+  // @@index([profileId, conversationId])
+}
+
+model ProfileConversation {
+  id String @id @default(uuid())
+
+  profile        Profile      @relation(fields: [profileId], references: [id])
+  profileId      String
+  conversation   Conversation @relation(fields: [conversationId], references: [id])
+  conversationId String
+  history        History      @relation(fields: [historyId], references: [id])
+  historyId      String       @unique
+
+  // @@index([profileId, conversationId])
+}
+
+model Conversation {
+  id                  String                @id @default(uuid())
+  participants        ProfileConversation[]
+  BlockedConversation BlockedConversation[]
+}
+
+model History {
+  id String @id @default(uuid())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  profileConversations ProfileConversation?
+  messageHistory       MessageHistory[]
+}
+
+model MessageHistory {
+  id         String    @id @default(uuid())
+  viewedAt   DateTime?
+  receivedAt DateTime?
+
+  history   History @relation(fields: [historyId], references: [id])
+  historyId String
+  message   Message @relation(fields: [messageId], references: [id])
+  messageId String
+}
+
+model Message {
+  id      String @id @default(uuid())
+  content String
+
+  from           Profile          @relation(fields: [fromId], references: [id])
+  fromId         String
+  createdAt      DateTime         @default(now())
+  messageHistory MessageHistory[]
+}
