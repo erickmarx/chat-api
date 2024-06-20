@@ -9,10 +9,21 @@ export class GetConversationsService {
     //RETORNAR HISTORICOS
     return await this.prismaService.conversation.findMany({
       where: {
-        blockedConversation: { some: { blocked: false } },
+        // blockedConversation: { some: { blocked: false } },
         participants: {
           some: {
             profileId,
+          },
+        },
+      },
+      select: {
+        participants: {
+          where: { profileId },
+          select: {
+            profileId: true,
+            profile: { select: { name: true } },
+            historyId: true,
+            id: true,
           },
         },
       },

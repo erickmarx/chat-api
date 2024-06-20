@@ -1,9 +1,9 @@
 export interface IRetrieveMessages {
   historyId: string;
-  message: {
+  messages: {
     id: string;
     content: string;
     fromId: string;
     createdAt: Date;
-  };
+  }[];
 }
