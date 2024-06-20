@@ -29,9 +29,10 @@ CREATE TABLE "BlockedConversation" (
 -- CreateTable
 CREATE TABLE "ProfileConversation" (
     "id" TEXT NOT NULL,
+    "deleted" BOOLEAN NOT NULL DEFAULT false,
     "profileId" TEXT NOT NULL,
     "conversationId" TEXT NOT NULL,
-    "historyId" TEXT NOT NULL,
+    "historyId" TEXT,
 
     CONSTRAINT "ProfileConversation_pkey" PRIMARY KEY ("id")
 );
@@ -95,10 +96,10 @@ ALTER TABLE "ProfileConversation" ADD CONSTRAINT "ProfileConversation_profileId_
 ALTER TABLE "ProfileConversation" ADD CONSTRAINT "ProfileConversation_conversationId_fkey" FOREIGN KEY ("conversationId") REFERENCES "Conversation"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "ProfileConversation" ADD CONSTRAINT "ProfileConversation_historyId_fkey" FOREIGN KEY ("historyId") REFERENCES "History"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "ProfileConversation" ADD CONSTRAINT "ProfileConversation_historyId_fkey" FOREIGN KEY ("historyId") REFERENCES "History"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "MessageHistory" ADD CONSTRAINT "MessageHistory_historyId_fkey" FOREIGN KEY ("historyId") REFERENCES "History"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "MessageHistory" ADD CONSTRAINT "MessageHistory_historyId_fkey" FOREIGN KEY ("historyId") REFERENCES "History"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "MessageHistory" ADD CONSTRAINT "MessageHistory_messageId_fkey" FOREIGN KEY ("messageId") REFERENCES "Message"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

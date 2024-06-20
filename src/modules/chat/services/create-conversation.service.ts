@@ -74,6 +74,6 @@ export class CreateConversationService {
       },
     );
 
-    return createdConversation.id;
+    return { conversationId: createdConversation.id };
   }
 }

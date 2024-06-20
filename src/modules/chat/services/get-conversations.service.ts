@@ -7,26 +7,19 @@ export class GetConversationsService {
 
   async get(profileId: string) {
     //RETORNAR HISTORICOS
-    return await this.prismaService.conversation.findMany({
-      where: {
-        // blockedConversation: { some: { blocked: false } },
-        participants: {
-          some: {
-            profileId,
-          },
+    const profileConversation =
+      await this.prismaService.profileConversation.findMany({
+        where: { profileId, deleted: false },
+        select: {
+          id: true,
+          historyId: true,
+          conversationId: true,
+          profile: { select: { id: true, name: true } },
         },
-      },
-      select: {
-        participants: {
-          where: { profileId },
-          select: {
-            profileId: true,
-            profile: { select: { name: true } },
-            historyId: true,
-            id: true,
-          },
-        },
-      },
-    });
+      });
+
+    if (!profileConversation) throw new Error('Profile conversation not found');
+
+    return profileConversation;
   }
 }

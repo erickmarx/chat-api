@@ -9,7 +9,7 @@ export class DeleteConversationService {
     const profileConversation =
       await this.prismaService.profileConversation.findFirst({
         where: { conversationId, profileId },
-        select: { id: true, historyId: true },
+        select: { id: true },
       });
 
     if (!profileConversation) throw new Error('Profile conversation not found');
@@ -21,19 +21,14 @@ export class DeleteConversationService {
 
     if (history) {
       await this.prismaService.$transaction([
-        this.prismaService.messageHistory.deleteMany({
-          where: {
-            historyId: history.id,
-          },
-        }),
-        this.prismaService.history.deleteMany({
+        this.prismaService.history.delete({
           where: { id: history.id },
+        }),
+        this.prismaService.profileConversation.update({
+          where: { id: profileConversation.id },
+          data: { deleted: true },
         }),
       ]);
     }
-
-    await this.prismaService.profileConversation.delete({
-      where: { id: profileConversation.id },
-    });
   }
 }

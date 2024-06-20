@@ -22,7 +22,7 @@ export class SendMessageService {
           where: {
             // conversation: { blockedConversation: { some: { blocked: false } } },
           },
-          select: { profileId: true, historyId: true },
+          select: { id: true, profileId: true, historyId: true },
         },
       },
     });
@@ -46,6 +46,16 @@ export class SendMessageService {
         },
       },
     });
+
+    //precisa criar historico caso nao exista/conversa deletada
+
+    await this.prismaService.profileConversation.updateMany({
+      where: {
+        id: { in: conversation.participants.map(({ id }) => id) },
+      },
+      data: { deleted: false, },
+    });
+
 
     return conversation.participants.map(({ profileId }) => profileId);
   }
