@@ -9,6 +9,7 @@ CREATE TABLE "Profile" (
 -- CreateTable
 CREATE TABLE "ChatSettings" (
     "id" TEXT NOT NULL,
+    "notify" BOOLEAN NOT NULL DEFAULT true,
     "profileId" TEXT NOT NULL,
 
     CONSTRAINT "ChatSettings_pkey" PRIMARY KEY ("id")

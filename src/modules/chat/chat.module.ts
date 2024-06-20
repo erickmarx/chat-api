@@ -9,9 +9,10 @@ import { UpdateReceivedService } from './services/update-received.service';
 import { GetConversationsService } from './services/get-conversations.service';
 import { UpdateLastSeenService } from './services/update-last-seen.service';
 import { UpdateViewedService } from './services/update-viewed.service';
+import { SettingsService } from './services/settings.service';
 
 @Module({
-  imports: [PrismaModule,],
+  imports: [PrismaModule],
   providers: [
     ChatGateway,
     HandleConnectionService,
@@ -22,6 +23,7 @@ import { UpdateViewedService } from './services/update-viewed.service';
     GetConversationsService,
     UpdateLastSeenService,
     UpdateViewedService,
+    SettingsService,
   ],
 })
 export class ChatModule {}
