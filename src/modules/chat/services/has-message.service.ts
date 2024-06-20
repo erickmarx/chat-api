@@ -19,7 +19,8 @@ export class HasMessageService {
         viewedAt: null,
         history: { profileConversations: { profileId } },
       },
-      select: { id: true, message: { select: { id: true, content: true } } },
+      // select: { id: true, message: { select: { id: true, content: true } } },
+      select: { id: true },
     });
 
     return messages;

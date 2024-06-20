@@ -5,10 +5,12 @@ import { HasMessageService } from './has-message.service';
 import { ISocket } from '../interfaces/socket.interface';
 import { UpdateLastSeenService } from './update-last-seen.service';
 import { UpdateReceivedByHistoryMessageService } from './update-received-by-history-message.service';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 
 @Injectable()
 export class HandleConnectionService implements OnGatewayConnection {
   constructor(
+    private eventEmitter: EventEmitter2,
     private hasMessageService: HasMessageService,
     private updateLastSeenService: UpdateLastSeenService,
     private updateReceivedByHistoryMessageService: UpdateReceivedByHistoryMessageService,
@@ -30,35 +32,37 @@ export class HandleConnectionService implements OnGatewayConnection {
     server.profiles.set(client.profileId, client.id);
 
     //update lastseen
-    const profilesToUpdate = await this.updateLastSeenService.update(
+    const pairProfilesToUpdate = await this.updateLastSeenService.update(
       client.profileId,
       null,
     );
 
     //testar essa implementação de merda
     server.profiles.forEach(async (socketId, profileId) => {
-      if (profilesToUpdate.includes(profileId)) {
-        client
-          .to(socketId)
-          .emit('profile:online', { profileId, lastSeen: null });
+      if (pairProfilesToUpdate.includes(profileId)) {
+        this.eventEmitter.emit('profile:online', { profileId, lastSeen: null });
+
+        // client
+        //   .to(socketId)
+        //   .emit('profile:online', { profileId, lastSeen: null });
       }
     });
 
     //recuperar mensagens nao recebidas
-    const hasMessage = await this.hasMessageService.has(client.profileId);
+    const messageHistory = await this.hasMessageService.has(client.profileId);
 
-    if (hasMessage.length) {
-      await client.emitWithAck('message:has', hasMessage); //?? message:has
+    const messageHistoryIds = messageHistory.map(({ id }) => id);
 
-      await this.updateReceivedByHistoryMessageService.update(
-        hasMessage.map(({ id }) => id),
-      );
+    if (messageHistory.length) {
+     this.eventEmitter.emit('message:retrieve', messageHistoryIds); //?? message:has
+
+      // await this.updateReceivedByHistoryMessageService.update(
+      //   messageHistoryIds,
+      // );
     }
   }
 
   async disconnect(client: ISocket, server: IServer) {
-    server.profiles.delete(client.profileId);
-
     const lastSeen = new Date();
 
     const profilesToUpdate = await this.updateLastSeenService.update(
@@ -69,8 +73,15 @@ export class HandleConnectionService implements OnGatewayConnection {
     //testar essa implementação de merda
     server.profiles.forEach(async (socketId, profileId) => {
       if (profilesToUpdate.includes(profileId)) {
-        client.to(socketId).emit('profile:online', { profileId, lastSeen });
+        this.eventEmitter.emit('profile:online', {
+          profileId,
+          lastSeen: new Date(),
+        });
+
+        // client.to(socketId).emit('profile:online', { profileId, lastSeen });
       }
+
+      server.profiles.delete(client.profileId);
     });
   }
 }

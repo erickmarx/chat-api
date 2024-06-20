@@ -19,7 +19,9 @@ export class SendMessageService {
       where: { id: conversationId },
       select: {
         participants: {
-          where: { blocked: false },
+          where: {
+            // conversation: { blockedConversation: { some: { blocked: false } } },
+          },
           select: { profileId: true, historyId: true },
         },
       },

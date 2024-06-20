@@ -18,6 +18,7 @@ import { UpdateReceivedByHistoryMessageService } from './services/update-receive
 import { ChatController } from './chat.controller';
 import { ProfilesOnlineService } from './services/profiles-online.service';
 import { EventEmitterModule } from '@nestjs/event-emitter';
+import { RetrieveMessagesService } from './services/retrieve-messages.service';
 
 @Module({
   imports: [PrismaModule, EventEmitterModule.forRoot()],
@@ -39,6 +40,7 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
     HasMessageService,
     UpdateReceivedByHistoryMessageService,
     ProfilesOnlineService,
+    RetrieveMessagesService,
   ],
 })
 export class ChatModule {}
