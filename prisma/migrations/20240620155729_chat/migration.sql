@@ -1,6 +1,7 @@
 -- CreateTable
 CREATE TABLE "Profile" (
     "id" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
     "lastSeenAt" TIMESTAMP(3),
 
     CONSTRAINT "Profile_pkey" PRIMARY KEY ("id")

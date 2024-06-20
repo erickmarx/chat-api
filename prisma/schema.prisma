@@ -15,6 +15,7 @@ datasource db {
 
 model Profile {
   id                  String                @id @default(uuid())
+  name                String //só pra identificar quem é quem
   lastSeenAt          DateTime?
   profileConversation ProfileConversation[]
   messages            Message[]
@@ -52,16 +53,15 @@ model ProfileConversation {
   conversationId String
   history        History      @relation(fields: [historyId], references: [id])
   historyId      String       @unique
-
-  // @@index([profileId, conversationId])
 }
 
 model Conversation {
   id                  String                @id @default(uuid())
   participants        ProfileConversation[]
-  BlockedConversation BlockedConversation[]
+  blockedConversation BlockedConversation[]
 }
 
+//não remover para não perder funcionalidade de "deletar conversa" ou "deletar historico sem deletar conversa"
 model History {
   id String @id @default(uuid())
 

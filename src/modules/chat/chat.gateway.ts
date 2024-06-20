@@ -1,8 +1,6 @@
 import {
   ConnectedSocket,
   MessageBody,
-  OnGatewayConnection,
-  OnGatewayDisconnect,
   SubscribeMessage,
   WebSocketGateway,
   WebSocketServer,
@@ -19,9 +17,10 @@ import { UpdateViewedService } from './services/update-viewed.service';
 import { DeleteHistoryService } from './services/delete-history.service';
 import { DeleteConversationService } from './services/delete-conversation.service';
 import { BlockConversationService } from './services/block-history.service';
+import { IGatewayConnection } from './interfaces/gateway-connection.interface';
 
 @WebSocketGateway({ namespace: 'chat' })
-export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
+export class ChatGateway implements IGatewayConnection {
   @WebSocketServer() server: IServer;
 
   constructor(
@@ -37,7 +36,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     private blockConversationService: BlockConversationService,
   ) {}
 
-  async connect(client: ISocket) {
+  async handleConnection(client: ISocket) {
     await this.handleConnectionService.connect(client, this.server);
 
     console.log(this.server.profiles);
@@ -45,6 +44,8 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   async handleDisconnect(client: ISocket) {
     await this.handleConnectionService.disconnect(client, this.server);
+
+    console.log(this.server.profiles);
   }
 
   @SubscribeMessage('conversation:create')
