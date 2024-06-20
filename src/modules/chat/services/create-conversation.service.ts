@@ -22,9 +22,16 @@ export class CreateConversationService {
 
     const conversation = await this.prismaService.conversation.findFirst({
       where: {
-        participants: {
+        blockedConversation: {
           every: {
             blocked: false,
+            profileId: {
+              in: [profileId, participantId],
+            },
+          },
+        },
+        participants: {
+          every: {
             profileId: {
               in: [profileId, participantId],
             },
@@ -45,6 +52,14 @@ export class CreateConversationService {
                 data: [
                   {
                     profileId,
+                    historyId: await this.prismaService.history
+                      .create({
+                        data: {},
+                      })
+                      .then((data) => data.id),
+                  },
+                  {
+                    profileId: participantId,
                     historyId: await this.prismaService.history
                       .create({
                         data: {},

@@ -15,9 +15,13 @@ import { DeleteConversationService } from './services/delete-conversation.servic
 import { BlockConversationService } from './services/block-history.service';
 import { HasMessageService } from './services/has-message.service';
 import { UpdateReceivedByHistoryMessageService } from './services/update-received-by-history-message.service';
+import { ChatController } from './chat.controller';
+import { ProfilesOnlineService } from './services/profiles-online.service';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 
 @Module({
-  imports: [PrismaModule],
+  imports: [PrismaModule, EventEmitterModule.forRoot()],
+  controllers: [ChatController],
   providers: [
     ChatGateway,
     HandleConnectionService,
@@ -33,7 +37,8 @@ import { UpdateReceivedByHistoryMessageService } from './services/update-receive
     DeleteConversationService,
     BlockConversationService,
     HasMessageService,
-    UpdateReceivedByHistoryMessageService
+    UpdateReceivedByHistoryMessageService,
+    ProfilesOnlineService,
   ],
 })
 export class ChatModule {}
