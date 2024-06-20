@@ -30,11 +30,13 @@ export class ChatController {
     return await this.retrieveMessagesService.retrieve();
   }
 
+  //profileId is a temporary implementation, jwt
   @Get(':profileId/settings')
   async getSettings(@Param('profileId') profileId: string) {
     return await this.settingsService.getSettings(profileId);
   }
-
+  
+  //profileId is a temporary implementation, jwt
   @Patch(':profileId/settings')
   async settings(
     @Param('profileId') profileId: string,
