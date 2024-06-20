@@ -24,20 +24,37 @@ export class RetrieveMessagesService {
       ),
       tap(async ({ data }) => {
         console.log('data', data);
-        await this.update(data.map(({ historyId }) => historyId));
+        // await this.update(data.map(({ historyId }) => historyId));
       }),
     );
   }
 
   private async retrieveMessages(messageHistoryIds: string[]) {
-    return await this.prismaService.messageHistory.findMany({
-      where: { id: { in: messageHistoryIds } },
+    const historys = await this.prismaService.history.findMany({
+      where: { messageHistory: { some: { id: { in: messageHistoryIds } } } },
       select: {
-        historyId: true,
-        message: {
-          select: { id: true, content: true, fromId: true, createdAt: true },
+        id: true,
+        messageHistory: {
+          where: { receivedAt: null, viewedAt: null },
+          select: {
+            message: {
+              select: {
+                id: true,
+                content: true,
+                fromId: true,
+                createdAt: true,
+              },
+            },
+          },
         },
       },
+    });
+
+    return historys.map((history) => {
+      return {
+        historyId: history.id,
+        messages: history.messageHistory.map(({ message }) => message),
+      };
     });
   }
 

@@ -29,15 +29,19 @@ export class SendMessageService {
 
     if (!conversation) throw new Error('Conversation not found');
 
+    //atualizar visualização de quem enviou a mensagem
     await this.prismaService.message.create({
       data: {
         content,
         fromId: profileId,
         messageHistory: {
           createMany: {
-            data: conversation.participants.map(({ historyId }) => ({
-              historyId,
-            })),
+            data: conversation.participants.map(
+              ({ historyId, profileId: participantId }) =>
+                participantId !== profileId
+                  ? { historyId }
+                  : { historyId, receivedAt: new Date(), viewedAt: new Date() },
+            ),
           },
         },
       },
