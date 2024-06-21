@@ -5,7 +5,8 @@ import { PrismaService } from '../../prisma/prisma.service';
 export class BlockConversationService {
   constructor(private prismaService: PrismaService) {}
 
-  async block(profileId: string, conversationId: string, blocked: boolean) {
+  async block(profileId: string, conversationId: string, blocked: boolean): Promise<void> {
+    //revisar
     const conversation = await this.prismaService.conversation.findFirst({
       where: { id: conversationId },
       select: { id: true },

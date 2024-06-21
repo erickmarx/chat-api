@@ -5,7 +5,7 @@ import { PrismaService } from '../../prisma/prisma.service';
 export class DeleteConversationService {
   constructor(private prismaService: PrismaService) {}
 
-  async delete(profileId: string, conversationId: string) {
+  async delete(profileId: string, conversationId: string): Promise<void> {
     const profileConversation =
       await this.prismaService.profileConversation.findFirst({
         where: { conversationId, profileId },

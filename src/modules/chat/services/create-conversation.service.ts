@@ -1,11 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
+import { ICreateConversation } from '../interfaces/create-conversation.interface';
 
 @Injectable()
 export class CreateConversationService {
   constructor(private prismaService: PrismaService) {}
 
-  async create(profileId: string, participantId: string) {
+  async create(
+    profileId: string,
+    participantId: string,
+  ): Promise<ICreateConversation> {
     const profile = await this.prismaService.profile.findFirst({
       where: { id: profileId },
       select: { id: true },
@@ -41,7 +45,7 @@ export class CreateConversationService {
       select: { id: true },
     });
 
-    if (conversation) return conversation;
+    if (conversation) return { conversationId: conversation.id };
 
     const createdConversation = await this.prismaService.$transaction(
       async () => {

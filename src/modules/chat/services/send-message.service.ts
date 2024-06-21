@@ -1,12 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
-import { IMessagePayload } from '../interfaces/message-payload.interface';
 
 @Injectable()
 export class SendMessageService {
   constructor(private prismaService: PrismaService) {}
 
-  async send(profileId: string, conversationId: string, content: string) {
+  async send(
+    profileId: string,
+    conversationId: string,
+    content: string,
+  ): Promise<string[]> {
     const profile = await this.prismaService.profile.findFirst({
       where: { id: profileId },
       select: { id: true },
@@ -53,9 +56,8 @@ export class SendMessageService {
       where: {
         id: { in: conversation.participants.map(({ id }) => id) },
       },
-      data: { deleted: false, },
+      data: { deleted: false },
     });
-
 
     return conversation.participants.map(({ profileId }) => profileId);
   }

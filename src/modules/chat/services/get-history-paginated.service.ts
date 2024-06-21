@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { UpdateViewedService } from './update-viewed.service';
+import { IGetHistory } from '../interfaces/get-history.interface';
 
 @Injectable()
 export class GetHistoryPaginatedService {
@@ -10,7 +11,7 @@ export class GetHistoryPaginatedService {
   ) {}
 
   //add pagination
-  async get(profileId: string, conversationId: string) {
+  async get(profileId: string, conversationId: string): Promise<IGetHistory> {
     const profile = await this.prismaService.profile.findFirst({
       where: { id: profileId },
       select: { id: true },

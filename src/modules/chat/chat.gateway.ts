@@ -18,6 +18,12 @@ import { DeleteHistoryService } from './services/delete-history.service';
 import { DeleteConversationService } from './services/delete-conversation.service';
 import { BlockConversationService } from './services/block-history.service';
 import { IGatewayConnection } from './interfaces/gateway-connection.interface';
+import { ICreateConversation } from './interfaces/create-conversation.interface';
+import { CreateConversationDTO } from './dto/create-conversation.dto';
+import { ConversationIdDTO } from './dto/conversation-id.dto';
+import { SendMessageDTO } from './dto/send-message.dto';
+import { BlockConversationDTO } from './dto/block-conversation.dto';
+import { IGetHistory } from './interfaces/get-history.interface';
 
 @WebSocketGateway({ namespace: 'chat' })
 export class ChatGateway implements IGatewayConnection {
@@ -51,8 +57,8 @@ export class ChatGateway implements IGatewayConnection {
   @SubscribeMessage('conversation:create')
   async handleCreateConversation(
     @ConnectedSocket() { profileId }: ISocket,
-    @MessageBody() data: { participantId: string },
-  ) {
+    @MessageBody() data: CreateConversationDTO,
+  ): Promise<ICreateConversation> {
     return await this.createConversationService.create(
       profileId,
       data.participantId,
@@ -62,8 +68,8 @@ export class ChatGateway implements IGatewayConnection {
   @SubscribeMessage('message:send')
   async handleSendMessage(
     @ConnectedSocket() { profileId }: ISocket,
-    @MessageBody() data: { conversationId: string; content: string },
-  ) {
+    @MessageBody() data: SendMessageDTO,
+  ): Promise<void> {
     const profiles = await this.sendMessageService.send(
       profileId,
       data.conversationId,
@@ -92,57 +98,57 @@ export class ChatGateway implements IGatewayConnection {
   @SubscribeMessage('history:get')
   async handleGetHistory(
     @ConnectedSocket() { profileId }: ISocket,
-    @MessageBody() data: { conversationId: string },
-  ) {
+    @MessageBody() data: ConversationIdDTO,
+  ): Promise<IGetHistory> {
     return await this.getHistoryPaginatedService.get(
       profileId,
       data.conversationId,
     );
   }
 
+  //revisar
   @SubscribeMessage('conversation:get')
-  async handleGetConversations(@ConnectedSocket() { profileId }: ISocket) {
+  async handleGetConversations(
+    @ConnectedSocket() { profileId }: ISocket,
+  ): Promise<any> {
     return await this.getConversationsService.get(profileId);
   }
 
   @SubscribeMessage('message:viewed')
   async handleUpdateViewed(
     @ConnectedSocket() { profileId }: ISocket,
-    @MessageBody() data: { conversationId: string },
-  ) {
-    return await this.updateViewedService.update(
-      profileId,
-      data.conversationId,
-    );
+    @MessageBody() data: ConversationIdDTO,
+  ): Promise<void> {
+    await this.updateViewedService.update(profileId, data.conversationId);
   }
 
-  @SubscribeMessage('history:delete')
+  //revisar
+@SubscribeMessage('history:delete')
   async handleDeleteHistory(
     @ConnectedSocket() { profileId }: ISocket,
-    @MessageBody() data: { conversationId: string },
-  ) {
-    return await this.deleteHistoryService.delete(
-      profileId,
-      data.conversationId,
-    );
+    @MessageBody() data: ConversationIdDTO,
+  ): Promise<void> {
+    await this.deleteHistoryService.delete(profileId, data.conversationId);
   }
 
+  //revisar
   @SubscribeMessage('conversation:delete')
   async handleDeleteConversation(
     @ConnectedSocket() { profileId }: ISocket,
-    @MessageBody() data: { conversationId: string },
-  ) {
+    @MessageBody() data: ConversationIdDTO,
+  ): Promise<void> {
     return await this.deleteConversationService.delete(
       profileId,
       data.conversationId,
     );
   }
 
+  //revisar
   @SubscribeMessage('conversation:block')
   async handleBlockConversation(
     @ConnectedSocket() { profileId }: ISocket,
-    @MessageBody() data: { conversationId: string; block: boolean },
-  ) {
+    @MessageBody() data: BlockConversationDTO,
+  ): Promise<void> {
     return await this.blockConversationService.block(
       profileId,
       data.conversationId,

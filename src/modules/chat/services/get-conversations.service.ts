@@ -5,8 +5,9 @@ import { PrismaService } from '../../prisma/prisma.service';
 export class GetConversationsService {
   constructor(private prismaService: PrismaService) {}
 
-  async get(profileId: string) {
+  async get(profileId: string): Promise<any> {
     //RETORNAR HISTORICOS
+    //revisar
     const profileConversation =
       await this.prismaService.profileConversation.findMany({
         where: { profileId, deleted: false },

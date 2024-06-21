@@ -5,7 +5,7 @@ import { PrismaService } from '../../prisma/prisma.service';
 export class UpdateViewedService {
   constructor(private prismaService: PrismaService) {}
 
-  async update(profileId: string, conversationId: string) {
+  async update(profileId: string, conversationId: string): Promise<void> {
     const conversation = await this.prismaService.conversation.findFirst({
       where: { id: conversationId, participants: { some: { profileId } } },
       select: { id: true },
