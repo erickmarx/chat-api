@@ -4,7 +4,7 @@ import { PrismaModule } from '../prisma/prisma.module';
 import { SendMessageService } from './services/send-message.service';
 import { ChatGateway } from './chat.gateway';
 import { CreateConversationService } from './services/create-conversation.service';
-import { HandleConnectionService } from './services/handle-connection.service';
+import { GatewayConnectionService } from './services/handle-connection.service';
 import { UpdateReceivedService } from './services/update-received.service';
 import { GetConversationsService } from './services/get-conversations.service';
 import { UpdateLastSeenService } from './services/update-last-seen.service';
@@ -25,7 +25,7 @@ import { RetrieveMessagesService } from './services/retrieve-messages.service';
   controllers: [ChatController],
   providers: [
     ChatGateway,
-    HandleConnectionService,
+    GatewayConnectionService,
     GetHistoryPaginatedService,
     SendMessageService,
     CreateConversationService,

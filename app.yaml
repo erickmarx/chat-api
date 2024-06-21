@@ -1,0 +1,9 @@
+runtime: nodejs22
+
+entrypoint: node dist/main
+
+env_variables:
+  PORT: 8080
+
+includes:
+  - env.yaml

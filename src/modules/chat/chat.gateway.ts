@@ -8,7 +8,7 @@ import {
 import { GetHistoryPaginatedService } from './services/get-history-paginated.service';
 import { SendMessageService } from './services/send-message.service';
 import { CreateConversationService } from './services/create-conversation.service';
-import { HandleConnectionService } from './services/handle-connection.service';
+import { GatewayConnectionService } from './services/handle-connection.service';
 import { ISocket } from './interfaces/socket.interface';
 import { IServer } from './interfaces/server.interface';
 import { UpdateReceivedService } from './services/update-received.service';
@@ -30,7 +30,7 @@ export class ChatGateway implements IGatewayConnection {
   @WebSocketServer() server: IServer;
 
   constructor(
-    private handleConnectionService: HandleConnectionService,
+    private handleConnectionService: GatewayConnectionService,
     private createConversationService: CreateConversationService,
     private getHistoryPaginatedService: GetHistoryPaginatedService,
     private sendMessageService: SendMessageService,

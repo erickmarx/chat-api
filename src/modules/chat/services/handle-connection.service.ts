@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { OnGatewayConnection } from '@nestjs/websockets';
 import { IServer } from '../interfaces/server.interface';
 import { HasMessageService } from './has-message.service';
 import { ISocket } from '../interfaces/socket.interface';
@@ -8,7 +7,7 @@ import { UpdateReceivedByHistoryMessageService } from './update-received-by-hist
 import { EventEmitter2 } from '@nestjs/event-emitter';
 
 @Injectable()
-export class HandleConnectionService implements OnGatewayConnection {
+export class GatewayConnectionService {
   constructor(
     private eventEmitter: EventEmitter2,
     private hasMessageService: HasMessageService,
@@ -54,7 +53,7 @@ export class HandleConnectionService implements OnGatewayConnection {
     const messageHistoryIds = messageHistory.map(({ id }) => id);
 
     if (messageHistory.length) {
-     this.eventEmitter.emit('message:retrieve', messageHistoryIds); //?? message:has
+      this.eventEmitter.emit('message:retrieve', messageHistoryIds); //?? message:has
 
       // await this.updateReceivedByHistoryMessageService.update(
       //   messageHistoryIds,
