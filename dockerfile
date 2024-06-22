@@ -30,6 +30,8 @@ COPY --chown=node:node --from=prod-deps /api/node_modules ./node_modules
 
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 
+RUN pnpm install @nest/cli
+
 # COPY --chown=node:node --from=prod-deps /api/node_modules ./node_modules
 
 COPY --chown=node:node /src ./src
