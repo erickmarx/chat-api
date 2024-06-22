@@ -4,6 +4,7 @@ ENV PATH="$PNPM_HOME:$PATH"
 RUN corepack enable
 WORKDIR /api
 
+
 #####################
 
 FROM base AS prod-deps
@@ -45,6 +46,8 @@ RUN pnpm run build
 #####################
 
 FROM base AS production
+
+RUN pnpm install @nest/cli
 
 ENV NODE_ENV production
 COPY --chown=node:node --from=prod-deps /api/node_modules ./node_modules
