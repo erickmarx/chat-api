@@ -3,6 +3,7 @@ ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 RUN corepack enable
 WORKDIR /api
+RUN pnpm install -g @nestjs/cli
 
 
 #####################
@@ -31,8 +32,6 @@ COPY --chown=node:node --from=prod-deps /api/node_modules ./node_modules
 
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 
-RUN pnpm install @nest/cli
-
 # COPY --chown=node:node --from=prod-deps /api/node_modules ./node_modules
 
 COPY --chown=node:node /src ./src
@@ -46,8 +45,6 @@ RUN pnpm run build
 #####################
 
 FROM base AS production
-
-RUN pnpm install @nest/cli
 
 ENV NODE_ENV production
 COPY --chown=node:node --from=prod-deps /api/node_modules ./node_modules
