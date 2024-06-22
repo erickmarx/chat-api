@@ -45,7 +45,6 @@ RUN pnpm run build
 FROM base AS production
 
 ENV NODE_ENV production
-ENV PORT 3000
 COPY --chown=node:node --from=prod-deps /api/node_modules ./node_modules
 COPY --chown=node:node --from=prod-deps /api/prisma ./prisma
 COPY --chown=node:node --from=build /api/dist ./dist
