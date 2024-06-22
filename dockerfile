@@ -45,11 +45,12 @@ RUN pnpm run build
 FROM base AS production
 
 ENV NODE_ENV production
+ENV PORT 8080
 COPY --chown=node:node --from=prod-deps /api/node_modules ./node_modules
 COPY --chown=node:node --from=prod-deps /api/prisma ./prisma
 COPY --chown=node:node --from=build /api/dist ./dist
 COPY --chown=node:node --from=build /api/package.json ./
 
-EXPOSE 3000
+EXPOSE 8080
 
 CMD ["/bin/sh", "-c", "pnpm exec prisma migrate deploy;node dist/main.js"]
