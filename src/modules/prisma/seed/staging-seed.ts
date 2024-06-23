@@ -1,5 +1,4 @@
 import { PrismaService } from '../prisma.service';
-const prisma = new PrismaService();
 
 const profiles = [
   {
@@ -44,7 +43,7 @@ const messages = [
   },
 ];
 
-async function main() {
+export async function stagingSeed(prisma: PrismaService) {
   await prisma.$transaction([
     prisma.profile.createMany({
       data: [profiles[0], profiles[1]],
@@ -103,13 +102,3 @@ async function main() {
     }),
   ]);
 }
-
-main()
-  .then(async () => {
-    await prisma.$disconnect();
-  })
-  .catch(async (e) => {
-    console.error(e);
-    await prisma.$disconnect();
-    process.exit(1);
-  });

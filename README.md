@@ -14,7 +14,7 @@
     <br />
     <a href="https://github.com/erickmarx/chat-api"><strong>Explore the docs »</strong></a>
     <br />
-    <a href="https://github.com/erickmarx/chat-api">View Demo</a>
+    <a href="https://chat-api-qjfduxo26q-uc.a.run.app">View Demo</a>
   </p>
 </div>
 
@@ -84,6 +84,10 @@ This project is a chat API that can be used in any project that needs a chat sys
 4. Generate Prisma client
    ```sh
    pnpm exec prisma generate
+   ```
+5. Seed the database
+   ```sh
+   pnpm exec prisma db seed -- --environment staging
    ```
 
 <!-- USAGE EXAMPLES -->
