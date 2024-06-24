@@ -18,7 +18,8 @@ export class GatewayConnectionService {
   async connect(client: ISocket, server: IServer) {
     // console.log(client.args[0].handshake.headers.authorization.split(' ')[1]) //Bearer token jwt
     //authenticate
-    const auth = client.handshake.headers.authorization;
+    const auth = client.handshake.query.profile as string;
+    // const auth = client.handshake.headers.authorization;
 
     if (!auth) throw new Error('Unauthorized');
 
