@@ -1,16 +1,9 @@
-import {
-  SubscribeMessage,
-  WebSocketGateway,
-  WebSocketServer,
-} from '@nestjs/websockets';
-import { IServer } from '../chat/interfaces/server.interface';
+import { SubscribeMessage, WebSocketGateway } from '@nestjs/websockets';
 
 @WebSocketGateway()
 export class HealthGateway {
-  @WebSocketServer() server: IServer;
-
   @SubscribeMessage('health')
   health() {
-    this.server.emit('health', 'ok');
+    return 'ok';
   }
 }
