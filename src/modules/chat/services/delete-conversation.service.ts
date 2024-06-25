@@ -6,16 +6,17 @@ export class DeleteConversationService {
   constructor(private prismaService: PrismaService) {}
 
   async delete(profileId: string, conversationId: string): Promise<void> {
-    const profileConversation =
-      await this.prismaService.profileConversation.findFirst({
+    const conversationOnProfile =
+      await this.prismaService.conversationOnProfile.findFirst({
         where: { conversationId, profileId },
         select: { id: true },
       });
 
-    if (!profileConversation) throw new Error('Profile conversation not found');
+    if (!conversationOnProfile)
+      throw new Error('Profile conversation not found');
 
     const history = await this.prismaService.history.findFirst({
-      where: { profileConversations: { conversationId, profileId } },
+      where: { conversationOnProfiles: { conversationId, profileId } },
       select: { id: true },
     });
 
@@ -24,8 +25,8 @@ export class DeleteConversationService {
         this.prismaService.history.delete({
           where: { id: history.id },
         }),
-        this.prismaService.profileConversation.update({
-          where: { id: profileConversation.id },
+        this.prismaService.conversationOnProfile.update({
+          where: { id: conversationOnProfile.id },
           data: { deleted: true },
         }),
       ]);

@@ -57,7 +57,7 @@ export async function stagingSeed(prisma: PrismaService) {
     prisma.history.createMany({
       data: [{ id: historys[0].id }, { id: historys[1].id }],
     }),
-    prisma.profileConversation.createMany({
+    prisma.conversationOnProfile.createMany({
       data: [
         {
           profileId: profiles[0].id,

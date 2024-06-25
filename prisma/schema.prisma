@@ -14,13 +14,13 @@ datasource db {
 }
 
 model Profile {
-  id                  String                @id @default(uuid())
-  name                String //só pra identificar quem é quem
-  lastSeenAt          DateTime?
-  profileConversation ProfileConversation[]
-  messages            Message[]
-  ChatSettings        ChatSettings?
-  blockedConversation BlockedConversation[]
+  id                    String                  @id @default(uuid())
+  name                  String //só pra identificar quem é quem
+  lastSeenAt            DateTime?
+  conversationOnProfile ConversationOnProfile[]
+  messages              Message[]
+  ChatSettings          ChatSettings?
+  blockedConversation   BlockedConversation[]
 }
 
 model ChatSettings {
@@ -44,7 +44,7 @@ model BlockedConversation {
   // @@index([profileId, conversationId])
 }
 
-model ProfileConversation {
+model ConversationOnProfile {
   id      String  @id @default(uuid())
   deleted Boolean @default(false)
 
@@ -53,12 +53,12 @@ model ProfileConversation {
   conversation   Conversation @relation(fields: [conversationId], references: [id])
   conversationId String
   history        History?     @relation(fields: [historyId], references: [id], onDelete: SetNull)
-  historyId      String?       @unique
+  historyId      String?      @unique
 }
 
 model Conversation {
-  id                  String                @id @default(uuid())
-  participants        ProfileConversation[]
+  id                  String                  @id @default(uuid())
+  participants        ConversationOnProfile[]
   blockedConversation BlockedConversation[]
 }
 
@@ -69,8 +69,8 @@ model History {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  profileConversations ProfileConversation?
-  messageHistory       MessageHistory[]
+  conversationOnProfiles ConversationOnProfile?
+  messageHistory         MessageHistory[]
 }
 
 model MessageHistory {

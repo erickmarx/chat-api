@@ -10,7 +10,7 @@ export class UpdateReceivedService {
       data: { receivedAt: new Date() },
       where: {
         history: {
-          profileConversations: {
+          conversationOnProfiles: {
             conversationId,
             profileId: { in: profileIds },
           },

@@ -17,7 +17,7 @@ export class HasMessageService {
       where: {
         receivedAt: null,
         viewedAt: null,
-        history: { profileConversations: { profileId } },
+        history: { conversationOnProfiles: { profileId } },
       },
       // select: { id: true, message: { select: { id: true, content: true } } },
       select: { id: true },

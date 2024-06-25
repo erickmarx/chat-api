@@ -38,7 +38,7 @@ export class GatewayConnectionService {
     );
 
     //testar essa implementação de merda
-    server.profiles.forEach(async (socketId, profileId) => {
+    server.profiles.forEach(async (_socketId, profileId) => {
       if (pairProfilesToUpdate.includes(profileId)) {
         this.eventEmitter.emit('profile:online', { profileId, lastSeen: null });
 

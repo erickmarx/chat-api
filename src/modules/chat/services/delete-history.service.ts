@@ -6,7 +6,7 @@ export class DeleteHistoryService {
   constructor(private prismaService: PrismaService) {}
   async delete(profileId: string, conversationId: string): Promise<void> {
     const history = await this.prismaService.history.findFirst({
-      where: { profileConversations: { conversationId, profileId } },
+      where: { conversationOnProfiles: { conversationId, profileId } },
       select: { id: true },
     });
 

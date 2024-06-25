@@ -9,9 +9,9 @@ export class UpdateLastSeenService {
     const a = await this.prismaService.profile.update({
       where: { id: profileId },
       data: { lastSeenAt },
-      select: { profileConversation: { select: { profileId: true } } },
+      select: { conversationOnProfile: { select: { profileId: true } } },
     });
 
-    return a.profileConversation.map(({ profileId }) => profileId);
+    return a.conversationOnProfile.map(({ profileId }) => profileId);
   }
 }

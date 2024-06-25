@@ -52,7 +52,7 @@ export class SendMessageService {
 
     //precisa criar historico caso nao exista/conversa deletada
 
-    await this.prismaService.profileConversation.updateMany({
+    await this.prismaService.conversationOnProfile.updateMany({
       where: {
         id: { in: conversation.participants.map(({ id }) => id) },
       },

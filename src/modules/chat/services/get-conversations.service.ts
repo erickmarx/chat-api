@@ -8,10 +8,10 @@ export class GetConversationsService {
 
   async get(profileId: string): Promise<IGetConversations[]> {
     const historys = await this.prismaService.history.findMany({
-      where: { profileConversations: { profileId, deleted: false } },
+      where: { conversationOnProfiles: { profileId, deleted: false } },
       select: {
         id: true,
-        profileConversations: {
+        conversationOnProfiles: {
           select: {
             id: true,
             conversationId: true,
@@ -22,9 +22,9 @@ export class GetConversationsService {
     });
 
     return historys.map((history) => ({
-      id: history.profileConversations.id,
-      conversationId: history.profileConversations.conversationId,
-      profile: history.profileConversations.profile,
+      id: history.conversationOnProfiles.id,
+      conversationId: history.conversationOnProfiles.conversationId,
+      profile: history.conversationOnProfiles.profile,
     }));
   }
 }

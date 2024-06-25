@@ -18,7 +18,7 @@ export class UpdateViewedService {
     await this.prismaService.$transaction([
       this.prismaService.messageHistory.updateMany({
         where: {
-          history: { profileConversations: { conversationId, profileId } },
+          history: { conversationOnProfiles: { conversationId, profileId } },
           receivedAt: null,
         },
         data: { viewedAt: date, receivedAt: date },
@@ -26,7 +26,7 @@ export class UpdateViewedService {
 
       this.prismaService.messageHistory.updateMany({
         where: {
-          history: { profileConversations: { conversationId, profileId } },
+          history: { conversationOnProfiles: { conversationId, profileId } },
           viewedAt: null,
         },
         data: { viewedAt: date },

@@ -26,8 +26,8 @@ export class GetHistoryPaginatedService {
 
     if (!conversation) throw new Error('Conversation not found');
 
-    const profileConversation =
-      await this.prismaService.profileConversation.findFirst({
+    const conversationOnProfile =
+      await this.prismaService.conversationOnProfile.findFirst({
         where: { profileId, conversationId: data.conversationId },
         select: {
           conversation: {
@@ -67,12 +67,12 @@ export class GetHistoryPaginatedService {
 
     return {
       profile: {
-        name: profileConversation.conversation.participants[0].profile.name,
+        name: conversationOnProfile.conversation.participants[0].profile.name,
         lastSeenAt:
-          profileConversation.conversation.participants[0].profile.lastSeenAt,
+          conversationOnProfile.conversation.participants[0].profile.lastSeenAt,
       },
-      historyId: profileConversation.history.id,
-      messages: profileConversation.history.messageHistory.map(
+      historyId: conversationOnProfile.history.id,
+      messages: conversationOnProfile.history.messageHistory.map(
         (messageHistory) => messageHistory.message,
       ),
     };
