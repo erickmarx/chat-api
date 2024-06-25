@@ -86,7 +86,7 @@ export class ChatGateway implements IGatewayConnection {
         return false;
       }
 
-      this.server.to(socketId).emit('message:receive'); //message:receive or message:has //subscribe mobile
+      this.server.to(socketId).emit('message:receive'); //message:receive or message:has && subscribe mobile
 
       return true;
     });
@@ -128,7 +128,6 @@ export class ChatGateway implements IGatewayConnection {
     await this.deleteHistoryService.delete(profileId, data.conversationId);
   }
 
-  //revisar
   @SubscribeMessage('conversation:delete')
   async handleDeleteConversation(
     @ConnectedSocket() { profileId }: ISocket,

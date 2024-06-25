@@ -17,33 +17,5 @@ export class UpdateReceivedService {
         },
       },
     });
-    // const messages = await this.prismaService.message.findMany({
-    //   where: {
-    //     historyConversations: { every: { conversationId } },
-    //     received: false,
-    //     viewed: false,
-    //   },
-    //   select: { id: true },
-    // });
-
-    // return await this.prismaService.message.updateMany({
-    //   where: {
-    //     historyConversations: { every: { profileId: { in: profileIds } } },
-    //     id: { in: messages.map(({ id }) => id) },
-    //   },
-    //   data: { received: true },
-    // });
-
-    // ==
-    // const historyConversation =
-    //   await this.prismaService.historyConversation.findFirst({
-    //     where: { conversationId, profileId: { in: profileIds } },
-    //     select: { id: true, received: true },
-    //   });
-
-    // return await this.prismaService.historyConversation.update({
-    //   where: { id: historyConversation.id },
-    //   data: { received: true },
-    // });
   }
 }

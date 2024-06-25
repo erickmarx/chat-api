@@ -17,14 +17,13 @@ export class SendMessageService {
 
     if (!profile) throw new Error('Profile not found');
 
-    //encontra conversa
     const conversation = await this.prismaService.conversation.findFirst({
       where: { id: conversationId },
       select: {
         participants: {
-          where: {
+          // where: {
             // conversation: { blockedConversation: { some: { blocked: false } } },
-          },
+          // },
           select: { id: true, profileId: true, historyId: true },
         },
       },
@@ -49,8 +48,6 @@ export class SendMessageService {
         },
       },
     });
-
-    //precisa criar historico caso nao exista/conversa deletada
 
     await this.prismaService.conversationOnProfile.updateMany({
       where: {

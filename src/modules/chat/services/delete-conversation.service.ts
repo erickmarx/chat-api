@@ -17,7 +17,7 @@ export class DeleteConversationService {
 
     const history = await this.prismaService.history.findFirst({
       where: { conversationOnProfiles: { conversationId, profileId } },
-      select: { id: true },
+      select: { id: true, messageHistory: { select: { id: true } } },
     });
 
     if (history) {
@@ -28,6 +28,9 @@ export class DeleteConversationService {
         this.prismaService.conversationOnProfile.update({
           where: { id: conversationOnProfile.id },
           data: { deleted: true },
+        }),
+        this.prismaService.messageHistory.deleteMany({
+          where: { id: { in: history.messageHistory.map(({ id }) => id) } },
         }),
       ]);
     }
