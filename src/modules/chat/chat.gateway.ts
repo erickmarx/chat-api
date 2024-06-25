@@ -120,7 +120,6 @@ export class ChatGateway implements IGatewayConnection {
     await this.updateViewedService.update(profileId, data.conversationId);
   }
 
-  //revisar
   @SubscribeMessage('history:delete')
   async handleDeleteHistory(
     @ConnectedSocket() { profileId }: ISocket,
