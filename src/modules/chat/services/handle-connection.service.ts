@@ -54,7 +54,7 @@ export class GatewayConnectionService {
     const messageHistoryIds = messageHistory.map(({ id }) => id);
 
     if (messageHistory.length) {
-      this.eventEmitter.emit('message:retrieve', messageHistoryIds); //?? message:has
+      this.eventEmitter.emit('message:retrieve', messageHistoryIds);
 
       // await this.updateReceivedByHistoryMessageService.update(
       //   messageHistoryIds,

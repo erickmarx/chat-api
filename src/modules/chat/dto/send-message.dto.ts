@@ -1,4 +1,5 @@
 export class SendMessageDTO {
-  conversationId: string;
+  conversationId?: string;
+  participantId?: string;
   content: string;
 }

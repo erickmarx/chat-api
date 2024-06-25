@@ -18,8 +18,8 @@ import { DeleteHistoryService } from './services/delete-history.service';
 import { DeleteConversationService } from './services/delete-conversation.service';
 import { BlockConversationService } from './services/block-history.service';
 import { IGatewayConnection } from './interfaces/gateway-connection.interface';
-import { ICreateConversation } from './interfaces/create-conversation.interface';
-import { CreateConversationDTO } from './dto/create-conversation.dto';
+// import { ICreateConversation } from './interfaces/create-conversation.interface';
+// import { CreateConversationDTO } from './dto/create-conversation.dto';
 import { ConversationIdDTO } from './dto/conversation-id.dto';
 import { SendMessageDTO } from './dto/send-message.dto';
 import { BlockConversationDTO } from './dto/block-conversation.dto';
@@ -56,25 +56,36 @@ export class ChatGateway implements IGatewayConnection {
     console.log(this.server.profiles);
   }
 
-  @SubscribeMessage('conversation:create')
-  async handleCreateConversation(
-    @ConnectedSocket() { profileId }: ISocket,
-    @MessageBody() data: CreateConversationDTO,
-  ): Promise<ICreateConversation> {
-    return await this.createConversationService.create(
-      profileId,
-      data.participantId,
-    );
-  }
+  // @SubscribeMessage('conversation:create')
+  // async handleCreateConversation(
+  //   @ConnectedSocket() { profileId }: ISocket,
+  //   @MessageBody() data: CreateConversationDTO,
+  // ): Promise<ICreateConversation> {
+  //   return await this.createConversationService.create(
+  //     profileId,
+  //     data.participantId,
+  //   );
+  // }
 
   @SubscribeMessage('message:send')
   async handleSendMessage(
     @ConnectedSocket() { profileId }: ISocket,
     @MessageBody() data: SendMessageDTO,
   ): Promise<void> {
+    let conversationId = data.conversationId;
+
+    if (!data.conversationId && !data.participantId) {
+      const conversation = await this.createConversationService.create(
+        profileId,
+        data.participantId,
+      );
+
+      conversationId = conversation.conversationId;
+    }
+
     const profiles = await this.sendMessageService.send(
       profileId,
-      data.conversationId,
+      conversationId,
       data.content,
     );
 
@@ -86,7 +97,7 @@ export class ChatGateway implements IGatewayConnection {
         return false;
       }
 
-      this.server.to(socketId).emit('message:receive'); //message:receive or message:has && subscribe mobile
+      this.server.to(socketId).emit('message:receive'); //revisar
 
       return true;
     });

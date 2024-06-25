@@ -11,29 +11,22 @@ export class CreateConversationService {
     participantId: string,
   ): Promise<ICreateConversation> {
     const profile = await this.prismaService.profile.findFirst({
-      where: { id: profileId },
+      where: { AND: [{ id: profileId }, { id: participantId }] },
       select: { id: true },
     });
 
     if (!profile) throw new Error('Profile not found');
 
-    const participant = await this.prismaService.profile.findFirst({
-      where: { id: participantId },
-      select: { id: true },
-    });
-
-    if (!participant) throw new Error('Participant not found');
-
     const conversation = await this.prismaService.conversation.findFirst({
       where: {
-        blockedConversation: {
-          every: {
-            blocked: false,
-            profileId: {
-              in: [profileId, participantId],
-            },
-          },
-        },
+        // blockedConversation: {
+        //   every: {
+        //     blocked: false,
+        //     profileId: {
+        //       in: [profileId, participantId],
+        //     },
+        //   },
+        // },
         participants: {
           every: {
             profileId: {
