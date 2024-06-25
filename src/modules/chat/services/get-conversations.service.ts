@@ -11,6 +11,7 @@ export class GetConversationsService {
       where: { conversationOnProfiles: { profileId, deleted: false } },
       select: {
         id: true,
+        messageHistory: { where: { viewedAt: null }, select: { id: true } },
         conversationOnProfiles: {
           select: {
             id: true,
@@ -23,6 +24,7 @@ export class GetConversationsService {
 
     return historys.map((history) => ({
       id: history.conversationOnProfiles.id,
+      countMessages: history.messageHistory.length,
       conversationId: history.conversationOnProfiles.conversationId,
       profile: history.conversationOnProfiles.profile,
     }));
