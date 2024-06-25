@@ -24,6 +24,7 @@ import { ConversationIdDTO } from './dto/conversation-id.dto';
 import { SendMessageDTO } from './dto/send-message.dto';
 import { BlockConversationDTO } from './dto/block-conversation.dto';
 import { IGetHistory } from './interfaces/get-history.interface';
+import { IGetConversations } from './interfaces/get-conversations.interface';
 
 @WebSocketGateway({ namespace: 'chat' })
 export class ChatGateway implements IGatewayConnection {
@@ -110,7 +111,7 @@ export class ChatGateway implements IGatewayConnection {
   @SubscribeMessage('conversation:get')
   async handleGetConversations(
     @ConnectedSocket() { profileId }: ISocket,
-  ): Promise<any> {
+  ): Promise<IGetConversations[]> {
     return await this.getConversationsService.get(profileId);
   }
 
@@ -123,7 +124,7 @@ export class ChatGateway implements IGatewayConnection {
   }
 
   //revisar
-@SubscribeMessage('history:delete')
+  @SubscribeMessage('history:delete')
   async handleDeleteHistory(
     @ConnectedSocket() { profileId }: ISocket,
     @MessageBody() data: ConversationIdDTO,

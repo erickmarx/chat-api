@@ -1,26 +1,30 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
+import { IGetConversations } from '../interfaces/get-conversations.interface';
 
 @Injectable()
 export class GetConversationsService {
   constructor(private prismaService: PrismaService) {}
 
-  async get(profileId: string): Promise<any> {
-    //RETORNAR HISTORICOS
-    //revisar
-    const profileConversation =
-      await this.prismaService.profileConversation.findMany({
-        where: { profileId, deleted: false },
-        select: {
-          id: true,
-          historyId: true,
-          conversationId: true,
-          profile: { select: { id: true, name: true } },
+  async get(profileId: string): Promise<IGetConversations[]> {
+    const historys = await this.prismaService.history.findMany({
+      where: { profileConversations: { profileId, deleted: false } },
+      select: {
+        id: true,
+        profileConversations: {
+          select: {
+            id: true,
+            conversationId: true,
+            profile: { select: { id: true, name: true } },
+          },
         },
-      });
+      },
+    });
 
-    if (!profileConversation) throw new Error('Profile conversation not found');
-
-    return profileConversation;
+    return historys.map((history) => ({
+      id: history.profileConversations.id,
+      conversationId: history.profileConversations.conversationId,
+      profile: history.profileConversations.profile,
+    }));
   }
 }
