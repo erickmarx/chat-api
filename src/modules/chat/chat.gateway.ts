@@ -25,6 +25,7 @@ import { SendMessageDTO } from './dto/send-message.dto';
 import { BlockConversationDTO } from './dto/block-conversation.dto';
 import { IGetHistory } from './interfaces/get-history.interface';
 import { IGetConversations } from './interfaces/get-conversations.interface';
+import { GetHistoryPaginatedDTO } from './dto/get-history.dto';
 
 @WebSocketGateway({ namespace: 'chat' })
 export class ChatGateway implements IGatewayConnection {
@@ -99,15 +100,11 @@ export class ChatGateway implements IGatewayConnection {
   @SubscribeMessage('history:get')
   async handleGetHistory(
     @ConnectedSocket() { profileId }: ISocket,
-    @MessageBody() data: ConversationIdDTO,
+    @MessageBody() data: GetHistoryPaginatedDTO,
   ): Promise<IGetHistory> {
-    return await this.getHistoryPaginatedService.get(
-      profileId,
-      data.conversationId,
-    );
+    return await this.getHistoryPaginatedService.get(profileId, data);
   }
 
-  //revisar
   @SubscribeMessage('conversation:get')
   async handleGetConversations(
     @ConnectedSocket() { profileId }: ISocket,

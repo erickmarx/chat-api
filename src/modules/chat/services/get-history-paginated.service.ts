@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { UpdateViewedService } from './update-viewed.service';
 import { IGetHistory } from '../interfaces/get-history.interface';
+import { IGetHistoryDTO } from '../interfaces/get-history-dto.interface';
 
 @Injectable()
 export class GetHistoryPaginatedService {
@@ -10,19 +11,16 @@ export class GetHistoryPaginatedService {
     private updateViewedService: UpdateViewedService,
   ) {}
 
-  //add pagination
-  async get(profileId: string, conversationId: string): Promise<IGetHistory> {
+  async get(profileId: string, data: IGetHistoryDTO): Promise<IGetHistory> {
     const profile = await this.prismaService.profile.findFirst({
       where: { id: profileId },
       select: { id: true },
     });
 
-    //validar profileId
     if (!profile) throw new Error('Profile not found');
 
-    //validar conversationId
     const conversation = await this.prismaService.conversation.findFirst({
-      where: { id: conversationId, participants: { some: { profileId } } },
+      where: { id: data.conversationId, participants: { some: { profileId } } },
       select: { id: true },
     });
 
@@ -30,7 +28,7 @@ export class GetHistoryPaginatedService {
 
     const profileConversation =
       await this.prismaService.profileConversation.findFirst({
-        where: { profileId, conversationId },
+        where: { profileId, conversationId: data.conversationId },
         select: {
           conversation: {
             select: {
@@ -57,14 +55,15 @@ export class GetHistoryPaginatedService {
                     },
                   },
                 },
-                take: 3,
+                skip: data.page * data.limit,
+                take: data.limit,
               },
             },
           },
         },
       });
 
-    await this.updateViewedService.update(profileId, conversationId);
+    await this.updateViewedService.update(profileId, data.conversationId);
 
     return {
       profile: {
