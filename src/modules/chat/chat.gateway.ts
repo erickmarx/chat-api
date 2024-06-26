@@ -72,10 +72,15 @@ export class ChatGateway implements IGatewayConnection {
     @ConnectedSocket() { profileId }: ISocket,
     @MessageBody() data: SendMessageDTO,
   ): Promise<void> {
+    // implementar WS throws
+    if (!data.conversationId && !data.participantId) {
+      throw new Error('ConversationId or ParticipantId is required');
+    }
+
     let conversationId = data.conversationId;
 
-    if (!data.conversationId && !data.participantId) {
-      const conversation = await this.createConversationService.create(
+    if (!data.conversationId && data.participantId) {
+      const conversation = await this.createConversationService.createOrFind(
         profileId,
         data.participantId,
       );

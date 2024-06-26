@@ -6,7 +6,7 @@ import { ICreateConversation } from '../interfaces/create-conversation.interface
 export class CreateConversationService {
   constructor(private prismaService: PrismaService) {}
 
-  async create(
+  async createOrFind(
     profileId: string,
     participantId: string,
   ): Promise<ICreateConversation> {

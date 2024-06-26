@@ -14,16 +14,11 @@ async function main() {
     values: { environment },
   } = parseArgs({ options } as any);
 
-  switch (environment) {
-    case 'development':
-      developmentSeed(prisma);
-      break;
-    case 'staging':
-      stagingSeed(prisma);
-      break;
-    default:
-      break;
+  if (environment === 'development') {
+    return developmentSeed(prisma);
   }
+
+  stagingSeed(prisma);
 }
 
 main()
